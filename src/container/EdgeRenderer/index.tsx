@@ -2,7 +2,7 @@ import React, { memo, CSSProperties, useCallback } from 'react';
 
 import { useStoreState } from '../../store/hooks';
 import ConnectionLine from '../../components/ConnectionLine/index';
-import { isEdge } from '../../utils/graph';
+import { getNodeInside, isEdge } from '../../utils/graph';
 import MarkerDefinitions from './MarkerDefinitions';
 import { getEdgePositions, getHandle, isEdgeVisible, getSourceTargetNodes } from './utils';
 import {
@@ -76,12 +76,12 @@ const Edge = ({
   );
 
   if (!sourceNode) {
-    console.warn(`couldn't create edge for source id: ${edge.source}; edge id: ${edge.id}`);
+    // console.warn(`couldn't create edge for source id: ${edge.source}; edge id: ${edge.id}`);
     return null;
   }
 
   if (!targetNode) {
-    console.warn(`couldn't create edge for target id: ${edge.target}; edge id: ${edge.id}`);
+    // console.warn(`couldn't create edge for target id: ${edge.target}; edge id: ${edge.id}`);
     return null;
   }
 
@@ -104,12 +104,12 @@ const Edge = ({
   const targetPosition = targetHandle ? targetHandle.position : Position.Top;
 
   if (!sourceHandle) {
-    console.warn(`couldn't create edge for source handle id: ${sourceHandleId}; edge id: ${edge.id}`);
+    // console.warn(`couldn't create edge for source handle id: ${sourceHandleId}; edge id: ${edge.id}`);
     return null;
   }
 
   if (!targetHandle) {
-    console.warn(`couldn't create edge for target handle id: ${targetHandleId}; edge id: ${edge.id}`);
+    // console.warn(`couldn't create edge for target handle id: ${targetHandleId}; edge id: ${edge.id}`);
     return null;
   }
 
@@ -121,6 +121,13 @@ const Edge = ({
     targetHandle,
     targetPosition
   );
+
+  const sourceNodeVisible = getNodeInside(sourceNode, { x: 0, y: 0, width, height }, transform, true)
+  const targetNodeVisible = getNodeInside(targetNode, { x: 0, y: 0, width, height }, transform, true)
+
+  if (!sourceNodeVisible && !targetNodeVisible) {
+    return null;
+  }
 
   const isVisible = onlyRenderVisibleElements
     ? isEdgeVisible({
