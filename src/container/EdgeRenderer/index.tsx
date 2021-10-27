@@ -103,13 +103,7 @@ const Edge = ({
   const sourcePosition = sourceHandle ? sourceHandle.position : Position.Bottom;
   const targetPosition = targetHandle ? targetHandle.position : Position.Top;
 
-  if (!sourceHandle) {
-    // console.warn(`couldn't create edge for source handle id: ${sourceHandleId}; edge id: ${edge.id}`);
-    return null;
-  }
-
-  if (!targetHandle) {
-    // console.warn(`couldn't create edge for target handle id: ${targetHandleId}; edge id: ${edge.id}`);
+  if ((!sourceHandle || !targetHandle) && !onlyRenderVisibleElements) {
     return null;
   }
 
